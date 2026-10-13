@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRASA Porto - Cards</title>
+    <link rel="icon" type="image/png" href="cards/icon.png">
+    <style>
+        :root {
+            --verde-brasa: #2E7D32;
+            --amarelo-brasa: #FFD600;
+            --azul-brasa: #0066B3;
+            --branco: #FFFFFF;
+            --cinza-claro: #F5F5F5;
+            --sombra: rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), 
+                radial-gradient(circle at 10% 20%, rgba(46, 125, 50, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 102, 179, 0.05) 0%, transparent 20%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 50px auto 30px; /* Aumentado espaço no topo */
+            padding: 0 20px;
+            position: relative; /* Para posicionar o botão */
+        }
+        
+        .back-button-container {
+            position: absolute;
+            top: -40px; /* Posiciona acima do container */
+            left: 20px;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--azul-brasa);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: 2px solid var(--azul-brasa);
+        }
+        
+        .back-button:hover {
+            background-color: white;
+            color: var(--azul-brasa);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        .search-container input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+        
+        .search-container input:focus {
+            border-color: var(--azul-brasa);
+            box-shadow: 0 0 0 3px rgba(0, 102, 179, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+        
+        .filter-options {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 18px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .filter-btn:hover {
+            background: #e9f7eb;
+            border-color: #c8e6c9;
+        }
+        
+        .filter-btn.active {
+            background: var(--verde-brasa);
+            border-color: var(--verde-brasa);
+            color: white;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-header h2 {
+            color: var(--verde-brasa);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .section-header p {
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 40px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        
+        th {
+            background: var(--verde-brasa);
+            color: var(--branco);
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--cinza-claro);
+        }
+        
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:hover {
+            background-color: rgba(46, 125, 50, 0.08);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.active {
+            background: rgba(46, 125, 50, 0.15);
+            color: var(--verde-brasa);
+        }
+        
+        .status-badge.expired {
+            background: rgba(211, 47, 47, 0.15);
+            color: #d32f2f;
+        }
+        
+        .action-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(0, 102, 179, 0.1);
+            border-radius: 4px;
+            color: var(--azul-brasa);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .action-link:hover {
+            background: rgba(0, 102, 179, 0.2);
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--azul-brasa), var(--verde-brasa));
+            color: var(--branco);
+            margin-top: 3rem;
+            border-top: 4px solid var(--amarelo-brasa);
+        }
+        
+        .social-icons {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .social-icon:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .note-box {
+            background: rgba(255, 214, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: center;
+            border-left: 4px solid var(--amarelo-brasa);
+        }
+        
+        @media (max-width: 768px) {
+            .filter-options {
+                gap: 8px;
+            }
+            
+            .filter-btn {
+                padding: 8px 14px;
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 12px 15px;
+            }
+            
+            .back-button-container {
+                position: static;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Botão de voltar -->
+        <div class="back-button-container">
+            <a href="index.html" class="back-button">← Voltar à Página Inicial</a>
+        </div>
+        
+        <div class="section-header">
+            <h2>Cartões - BRASA Porto</h2>
+            <p>Encontre todos BRASA Cards na lista abaixo</p>
+        </div>
+        
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="search-input" placeholder="Buscar por nome...">
+        </div>
+        
+        <div class="filter-options">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="A-D">A-D</button>
+            <button class="filter-btn" data-filter="E-H">E-H</button>
+            <button class="filter-btn" data-filter="I-L">I-L</button>
+            <button class="filter-btn" data-filter="M-P">M-P</button>
+            <button class="filter-btn" data-filter="Q-Z">Q-Z</button>
+        </div>
+        
+        <div class="table-container">
+            <table id="cards-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Data de Validade</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ana Silva</td>
+                        <td>15/08/2025</td>
+                        <td><span class="status-badge active">Ativo</span></td>
+                        <td><a href="cards/AS20DOC03.html" class="action-link">Ver Cartão</a></td>
+                    </tr>
+                    <tr>
+                        <td>Bernardo Costa</td>
+                        <td>30/11/2024</td>
+                        <td><span class="status-badge active">Ativo</span></td>
+                        <td><a href="cards/BC18DOC09.html" class="action-link">Ver Cartão</a></td>
+                    </tr>
+                    <tr>
+                        <td>Carlos Oliveira</td>
+                        <td>12/05/2023</td>
+                        <td><span class="status-badge expired">Expirado</span></td>
+                        <td><a href="cards/CO15DOC01.html" class="action-link">Ver Cartão</a></td>
+                    </tr>
+                    <tr>
+                        <td>Daniela Martins</td>
+                        <td>20/09/2025</td>
+                        <td><span class="status-badge active">Ativo</span></td>
+                        <td><a href="cards/DM22DOC07.html" class="action-link">Ver Cartão</a></td>
+                    </tr>
+                    <tr>
+                        <td>Eduardo Santos</td>
+                        <td>01/02/2024</td>
+                        <td><span class="status-badge active">Ativo</span></td>
+                        <td><a href="cards/ES19DOC12.html" class="action-link">Ver Cartão</a></td>
+                    </tr>
+                    <tr>
+                        <td>Fernanda Lima</td>
+                        <td>10/12/2025</td>
+                        <td><span class="status-badge active">Ativo</span></td>
+                        <td><a href="cards/FL24DOC15.html" class="action-link">Ver Cartão</a></td>
+                    </tr>
+                    <tr>
+                        <td>Gustavo Bongiovi</td>
+                        <td>25/07/2026</td>
+                        <td><span class="status-badge active">Ativo</span></td>
+                        <td><a href="cards/GB10DOC02.html" class="action-link">Ver Cartão</a></td>
+                    </tr>
+                    <tr>
+                        <td>Helena Mendes</td>
+                        <td>05/03/2025</td>
+                        <td><span class="status-badge active">Ativo</span></td>
+                        <td><a href="cards/HM21DOC08.html" class="action-link">Ver Cartão</a></td>
+                    </tr>
+                    <tr>
+                        <td>Igor Pereira</td>
+                        <td>18/09/2023</td>
+                        <td><span class="status-badge expired">Expirado</span></td>
+                        <td><a href="cards/IP17DOC14.html" class="action-link">Ver Cartão</a></td>
+                    </tr>
+                    <tr>
+                        <td>Juliana Pereira</td>
+                        <td>30/04/2025</td>
+                        <td><span class="status-badge active">Ativo</span></td>
+                        <td><a href="cards/JP12DOC06.html" class="action-link">Ver Cartão</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="note-box">
+            <p><strong>Nota:</strong> Se seu nome não consta na lista e acredita que seu cartão está válido, entre em contato conosco através do e-mail <strong>contato@brasaporto.pt</strong></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 BRASA Porto - Associação de Estudantes Brasileiros no Porto</p>
+        <p>Porto, Portugal</p>
+        
+        <div class="social-icons">
+            <a href="https://www.linkedin.com/company/brasa-porto" class="social-icon">in</a>
+            <a href="https://www.instagram.com/brasa.porto/" class="social-icon">ig</a>
+            <a href="mailto:contato@brasaporto.pt" class="social-icon">✉</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search-input');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const tableRows = document.querySelectorAll('#cards-table tbody tr');
+            
+            // Função para filtrar a tabela
+            function filterTable() {
+                const searchTerm = searchInput.value.toLowerCase();
+                let activeFilter = 'all';
+                
+                // Verificar qual filtro está ativo
+                filterButtons.forEach(btn => {
+                    if(btn.classList.contains('active')) {
+                        activeFilter = btn.dataset.filter;
+                    }
+                });
+                
+                tableRows.forEach(row => {
+                    const name = row.cells[0].textContent.toLowerCase();
+                    
+                    // Verificar busca
+                    const matchesSearch = name.includes(searchTerm);
+                    
+                    // Verificar filtro alfabético
+                    let matchesFilter = true;
+                    if(activeFilter !== 'all') {
+                        const firstLetter = name.charAt(0).toUpperCase();
+                        const filterRange = activeFilter.split('-');
+                        matchesFilter = firstLetter >= filterRange[0] && firstLetter <= filterRange[1];
+                    }
+                    
+                    if(matchesSearch && matchesFilter) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Event listeners
+            searchInput.addEventListener('input', filterTable);
+            
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filterTable();
+                });
+            });
+            
+            // Focar no campo de busca ao carregar a página
+            searchInput.focus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, shrink-to-fit=yes">
+    <link rel="icon" type="image/png" href="icon.png">
+    <title>BRASA Card - Gustavo Bongiovi</title>
+    <style>
+        :root{
+            --card-width: 370px;
+            --card-height: 580px;
+            --accent-1: #1488CA;
+            --accent-2: #78B343;
+            --bg-start: #f5f7fa;
+            --bg-end: #c3cfe2;
+        }
+
+		html {
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			user-select: none;
+			touch-action: none;
+			-webkit-touch-callout: none;
+			-webkit-text-size-adjust: 100%;
+			-ms-text-size-adjust: 100%;
+			text-size-adjust: 100%;
+		}
+
+		body {
+			zoom: 1;
+			max-zoom: 1;
+			min-zoom: 1;
+		}
+    
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0px;
+        }
+        
+        .card {
+            width: var(--card-width);
+            height: var(--card-height);
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+            margin-left: 1em;
+            margin-right: 1em;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-header {
+            height: 35%;
+            background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .header-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: auto;
+            z-index: 2;
+        }
+        
+        .photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: rgba(250, 225, 7, 0.3);
+            border: 5px solid white;
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            font-weight: bold;
+            z-index: 3;
+        }
+        
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+		.card-body {
+			padding: 60px 20px 20px;
+			text-align: center;
+			display: flex;
+			flex-direction: column;
+			/* Remova a altura fixa */
+			height: auto;
+			/* Adicione um mínimo de altura se necessário */
+			min-height: 200px;
+		}
+        
+        h1 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .title {
+            color: var(--accent-2);
+            font-weight: 500;
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        
+        .info {
+            margin: 25px 0;
+            text-align: left;
+            flex-grow: 1;
+        }
+        
+        .info-item {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .info-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .info-text {
+            color: #555;
+        }
+        
+		.validity-wrap{
+			display:flex;
+			flex-direction:column;
+			align-items:center;
+			margin-top: auto; /* pushes to bottom of card body */
+			margin-bottom: 15px;
+		}
+
+		.validity {
+			color: var(--accent-2);
+			padding: 10px 14px;
+			border-radius: 10px;
+			font-weight: 500;
+			display: inline-block;
+			border: 2px solid var(--accent-2);
+			background-color: transparent;
+			width: fit-content;
+		}
+
+		.card-number{
+			font-size: 12px; /* smaller size as requested */
+			color: #333;
+			opacity: 0.8;
+			margin-top:8px;
+		}
+
+        .pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 30% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 20%);
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 420px){
+            :root{ --card-width: 320px; --card-height: 540px; }
+            .photo{ width: 100px; height:100px; bottom: -50px; }
+            h1{ font-size:20px; }
+        }
+
+    
+        /* Modal (QR) */
+        .modal-overlay{
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-overlay.show{ display:flex; }
+        .modal{
+            background:white;
+            border-radius:12px;
+            padding:16px;
+            max-width:90%;
+            box-shadow:0 10px 30px rgba(0,0,0,0.3);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+        .modal img{ max-width:260px; width:100%; height:auto; display:block; }
+        .close-btn{ margin-top:12px; background:var(--accent-2); color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; }
+        .photo[role="button"]{ cursor:pointer; }
+        .photo[role="button"]:focus{ outline: 3px solid rgba(120,179,67,0.4); }
+</style>
+</head>
+<body>
+    <div class="card" role="region" aria-label="BRASA Card de Gustavo Bongiovi">
+        <div class="card-header">
+            <div class="header-content">
+                <img src="logo.png" alt="BRASA Porto" class="logo">
+                <div class="photo" role="button" aria-label="Abrir QR code" tabindex="0">
+                    <img src="GB10DOC02.jpg" alt="Foto de Gustavo Bongiovi">
+                </div>
+                <div class="pattern" aria-hidden="true"></div>
+            </div>
+        </div>
+        <div class="card-body">
+            <h1>Gustavo Bongiovi</h1>
+            <div class="title">Estudante-Trabalhador</div>
+            
+            <div class="info">
+			    <div class="info-item">
+			        <div class="info-icon">🏫</div>
+			        <div class="info-text"><b>Instituição:</b> Universidade do Porto</div>
+			    </div>
+			    <div class="info-item">
+			        <div class="info-icon">🌍</div>
+			        <div class="info-text"><b>Naturalidade:</b> Paraíba</div>
+			    </div>
+			    <!-- BRASA Card line removed as requested -->
+            </div>
+            
+            <div class="validity-wrap">
+                <div class="validity" aria-label="Validade">Válido até: 22-05-2026</div>
+                <!-- Relocated card number, smaller & centered beneath the validity -->
+                <div class="card-number">#GB10DOC02</div>
+            </div>
+        </div>
+    </div>
+
+<!--Impedir zoom no iphone-->
+
+<!-- QR Modal -->
+<div class="modal-overlay" id="qrModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="QR code">
+    <div class="modal">
+        <img src="qr_code.png" alt="QR code">
+        <button class="close-btn" type="button" id="closeQrBtn">Fechar</button>
+    </div>
+</div>
+
+<script>
+    // Impedir gesto de zoom no iPhone
+    document.addEventListener('gesturestart', function(e) {
+        e.preventDefault();
+        document.body.style.zoom = 0.95;
+    });
+
+    // Modal (QR) logic
+    (function(){
+        var photo = document.querySelector('.photo[role="button"]');
+        var modal = document.getElementById('qrModal');
+        var closeBtn = document.getElementById('closeQrBtn');
+
+        if(!photo || !modal) return;
+
+        function openModal(){
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden','false');
+            // move focus to close button for accessibility
+            closeBtn.focus();
+        }
+        function closeModal(){
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden','true');
+            // return focus to photo
+            photo.focus();
+        }
+
+        photo.addEventListener('click', openModal);
+        photo.addEventListener('keydown', function(e){
+            if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openModal(); }
+        });
+
+        closeBtn.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', function(e){
+            if(e.target === modal) closeModal();
+        });
+
+        document.addEventListener('keydown', function(e){
+            if(e.key === 'Escape' && modal.classList.contains('show')){
+                closeModal();
+            }
+        });
+    })();
+</script>
+</body>
+</html>
